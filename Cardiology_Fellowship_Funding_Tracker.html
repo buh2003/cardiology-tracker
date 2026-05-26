@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cardiology Fellowship Funding Tracker</title>
+  <style>
+    :root {
+      --blue:#1a5276; --blue-mid:#2e86c1; --blue-light:#d6eaf8;
+      --green:#1e8449; --green-light:#d5f5e3;
+      --red:#c0392b;  --red-light:#fadbd8;
+      --orange:#d35400; --orange-light:#fdebd0;
+      --purple:#6c3483; --purple-light:#e8daef;
+      --yellow:#c9a227; --yellow-light:#fef9e7;
+      --gray:#566573; --gray-light:#f2f3f4;
+      --border:#dee2e6; --shadow:0 2px 8px rgba(0,0,0,.10);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f6fa;color:#222;}
+
+    /* ─── HEADER ──────────────────────────────────────────── */
+    .hdr{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-mid) 100%);
+      color:white;padding:22px 32px 16px;border-bottom:4px solid #1a3f6f;}
+    .hdr h1{font-size:1.5rem;font-weight:700;}
+    .hdr-sub{font-size:.87rem;opacity:.8;margin-top:3px;}
+    .hdr-sync{font-size:.76rem;opacity:.6;margin-top:7px;}
+    .hdr-sync em{background:rgba(255,255,255,.15);border-radius:4px;
+      padding:2px 8px;font-style:normal;}
+
+    /* ─── CSS-ONLY TABS (works without JS, works in OneDrive) ─ */
+    .app>input[type=radio]{display:none;}
+    .tab-bar{display:flex;background:var(--blue);padding:0 32px;
+      border-bottom:2px solid #1a3f6f;overflow-x:auto;}
+    .tab-bar label{padding:10px 20px;cursor:pointer;font-size:.87rem;font-weight:600;
+      color:rgba(255,255,255,.6);border-bottom:3px solid transparent;
+      display:inline-block;white-space:nowrap;}
+    .tab-bar label:hover{color:white;}
+    .app>.section{display:none;}
+    #t-awards:checked   ~ .tab-bar label[for="t-awards"],
+    #t-timeline:checked ~ .tab-bar label[for="t-timeline"],
+    #t-calendar:checked ~ .tab-bar label[for="t-calendar"],
+    #t-tips:checked     ~ .tab-bar label[for="t-tips"]{
+      color:white;border-bottom-color:#f0c040;}
+    #t-awards:checked   ~ #sec-awards   {display:block;}
+    #t-timeline:checked ~ #sec-timeline {display:block;}
+    #t-calendar:checked ~ #sec-calendar {display:block;}
+    #t-tips:checked     ~ #sec-tips     {display:block;}
+
+    /* ─── LAYOUT ──────────────────────────────────────────── */
+    .main{max-width:1320px;margin:0 auto;padding:22px 18px;}
+
+    /* ─── STATUS BANNER ───────────────────────────────────── */
+    .status-banner{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+    .sb-card{display:flex;align-items:center;gap:10px;background:white;
+      border-radius:10px;padding:11px 16px;box-shadow:var(--shadow);
+      flex:1;min-width:130px;}
+    .sb-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;}
+    .dot-open{background:var(--green);}
+    .dot-announced{background:var(--yellow);}
+    .dot-closed{background:var(--red);}
+    .dot-unknown{background:#bbb;}
+    .sb-num{font-size:1.45rem;font-weight:700;line-height:1;}
+    .sb-lbl{font-size:.74rem;color:var(--gray);font-weight:500;}
+    .num-open{color:var(--green);}
+    .num-announced{color:var(--yellow);}
+    .num-closed{color:var(--red);}
+    .num-unknown{color:#aaa;}
+
+    /* ─── ALERT STRIP ─────────────────────────────────────── */
+    .alert-strip{background:#fff8e1;border:1.5px solid #f0c040;border-radius:8px;
+      padding:11px 15px;margin-bottom:16px;}
+    .alert-strip h4{color:#9a7d0a;font-size:.82rem;font-weight:700;margin-bottom:6px;}
+    .alert-item{display:flex;gap:8px;align-items:baseline;margin-bottom:3px;
+      font-size:.83rem;}
+    .days-chip{font-size:.70rem;background:#f0c040;color:#7d6608;
+      border-radius:10px;padding:1px 7px;font-weight:700;white-space:nowrap;}
+    .alert-item a{color:var(--blue);text-decoration:none;font-weight:600;}
+    .alert-item a:hover{text-decoration:underline;}
+    .alert-dl{color:var(--gray);}
+
+    /* ─── FILTER BAR (hidden until JS enables it) ─────────── */
+    #filter-bar{display:none;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
+    .filter-group{display:flex;gap:4px;align-items:center;}
+    .filter-label{font-size:.75rem;font-weight:700;color:var(--gray);
+      text-transform:uppercase;letter-spacing:.5px;margin-right:2px;white-space:nowrap;}
+    .fbtn{padding:4px 12px;border-radius:20px;border:1.5px solid var(--border);
+      background:white;cursor:pointer;font-size:.79rem;font-weight:500;
+      color:var(--gray);transition:all .15s;}
+    .fbtn:hover{border-color:var(--blue);color:var(--blue);}
+    .fbtn.active{background:var(--blue);color:white;border-color:var(--blue);}
+    .fbtn.f-open.active   {background:var(--green);border-color:var(--green);}
+    .fbtn.f-announced.active{background:var(--yellow);border-color:var(--yellow);color:#7d5000;}
+    .fbtn.f-closed.active {background:var(--red);border-color:var(--red);}
+    #search-box{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);
+      font-size:.82rem;width:200px;outline:none;}
+    #search-box:focus{border-color:var(--blue);}
+    .result-count{font-size:.76rem;color:var(--gray);margin-left:4px;}
+
+    /* ─── TABLE ───────────────────────────────────────────── */
+    .table-wrap{background:white;border-radius:12px;box-shadow:var(--shadow);overflow:auto;}
+    table{width:100%;border-collapse:collapse;font-size:.83rem;min-width:860px;}
+    thead th{background:var(--blue);color:white;padding:10px 11px;text-align:left;
+      font-size:.74rem;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+    thead th.sortable{cursor:pointer;user-select:none;}
+    thead th.sortable:hover{background:#1f6090;}
+    thead th.sort-asc::after{content:" ↑";}
+    thead th.sort-desc::after{content:" ↓";}
+    tbody tr{border-bottom:1px solid var(--border);transition:background .1s;}
+    tbody tr:hover{background:#f0f4fa;}
+    tbody tr:last-child{border-bottom:none;}
+    tbody tr.hidden-row{display:none;}
+    td{padding:9px 11px;vertical-align:top;}
+
+    /* ─── STATUS PILLS ────────────────────────────────────── */
+    .pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;
+      border-radius:12px;font-size:.74rem;font-weight:700;white-space:nowrap;}
+    .pill-dot{width:7px;height:7px;border-radius:50%;}
+    .pill-open    {background:var(--green-light);color:var(--green);}
+    .pill-open     .pill-dot{background:var(--green);}
+    .pill-announced{background:var(--yellow-light);color:#9a7d0a;}
+    .pill-announced .pill-dot{background:var(--yellow);}
+    .pill-closed  {background:var(--red-light);color:var(--red);}
+    .pill-closed   .pill-dot{background:var(--red);}
+    .pill-unknown {background:var(--gray-light);color:var(--gray);}
+    .pill-unknown  .pill-dot{background:#bbb;}
+
+    /* ─── BADGES ──────────────────────────────────────────── */
+    .badge{display:inline-block;padding:2px 8px;border-radius:10px;
+      font-size:.71rem;font-weight:600;}
+    .b-clinical{background:var(--blue-light);color:var(--blue);}
+    .b-basic{background:var(--purple-light);color:var(--purple);}
+    .b-translational{background:var(--green-light);color:var(--green);}
+    .b-any{background:var(--gray-light);color:var(--gray);}
+    .b-top{background:#fff3cd;color:#856404;border:1px solid #ffe69c;}
+
+    .amt{font-weight:700;color:var(--green);white-space:nowrap;}
+    .elig{font-size:.77rem;color:var(--gray);line-height:1.4;}
+    .typ{font-size:.77rem;color:var(--gray);white-space:nowrap;}
+    .lnk{color:var(--blue);text-decoration:none;font-weight:600;font-size:.78rem;}
+    .lnk:hover{text-decoration:underline;}
+    .dl-cell strong{font-size:.82rem;display:block;}
+    .dl-cell small{font-size:.71rem;color:var(--gray);}
+    .yr{display:inline-block;padding:1px 6px;border-radius:4px;
+      font-size:.69rem;font-weight:700;margin-right:2px;}
+    .yr1{background:#d5f5e3;color:#1e8449;}
+    .yr2{background:#d6eaf8;color:#1a5276;}
+    .yr3{background:#fadbd8;color:#c0392b;}
+    .yrp{background:#e8daef;color:#6c3483;}
+    .no-results{text-align:center;padding:28px;color:var(--gray);font-size:.88rem;}
+
+    /* ─── TIMELINE ────────────────────────────────────────── */
+    .note{background:#fff8e1;border-left:4px solid #f0c040;border-radius:6px;
+      padding:10px 14px;margin-bottom:16px;font-size:.83rem;color:#7d6608;}
+    .tl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+    .tl-col{background:white;border-radius:10px;box-shadow:var(--shadow);overflow:hidden;}
+    .tl-hdr{padding:10px 14px;font-weight:700;font-size:.88rem;}
+    .hdr-1{background:var(--green);color:white;}
+    .hdr-2{background:var(--blue);color:white;}
+    .hdr-3{background:var(--red);color:white;}
+    .hdr-p{background:var(--purple);color:white;}
+    .tl-sub{font-size:.72rem;opacity:.85;font-weight:400;}
+    .tl-body{padding:10px;}
+    .tl-item{border-left:3px solid var(--border);padding:5px 9px;margin-bottom:7px;
+      border-radius:0 5px 5px 0;background:var(--gray-light);font-size:.78rem;}
+    .tl-item strong{display:block;font-size:.80rem;color:#222;}
+    .tl-item span{color:var(--gray);}
+    .tl-act{background:#fff8e1;border-left-color:#f0c040;}
+    .tl-dl{background:#fef5f5;border-left-color:var(--red);}
+
+    /* ─── CALENDAR ────────────────────────────────────────── */
+    .cal-wrap{background:white;border-radius:10px;box-shadow:var(--shadow);padding:18px;}
+    .months{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
+    .mon{border-radius:7px;overflow:hidden;border:1px solid var(--border);}
+    .mon-name{background:var(--blue);color:white;padding:4px 8px;
+      font-size:.75rem;font-weight:700;text-align:center;}
+    .mon-body{padding:5px;min-height:52px;}
+    .ci{border-radius:3px;padding:2px 5px;font-size:.68rem;margin-bottom:2px;font-weight:600;}
+    .ci-b{background:var(--blue-light);color:var(--blue);}
+    .ci-r{background:var(--red-light);color:var(--red);}
+    .ci-g{background:var(--green-light);color:var(--green);}
+    .ci-o{background:var(--orange-light);color:var(--orange);}
+    .ci-gr{background:var(--gray-light);color:var(--gray);}
+
+    /* ─── TIPS ────────────────────────────────────────────── */
+    .tips-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .tip-card{background:white;border-radius:10px;box-shadow:var(--shadow);padding:18px;}
+    .tip-card h3{color:var(--blue);margin-bottom:10px;font-size:.93rem;}
+    .tip-card p,.tip-card li{font-size:.83rem;line-height:1.65;color:#444;}
+    .tip-card ul{padding-left:16px;}
+    .links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+      gap:8px;font-size:.81rem;}
+
+    /* ─── RESPONSIVE ──────────────────────────────────────── */
+    @media(max-width:1000px){.tl-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:900px){.months{grid-template-columns:repeat(3,1fr);}
+      .tips-grid{grid-template-columns:1fr;}}
+    @media(max-width:600px){.tl-grid{grid-template-columns:1fr;}
+      .months{grid-template-columns:repeat(2,1fr);}
+      .hdr h1{font-size:1.2rem;}
+      .tab-bar{padding:0 8px;}
+      .tab-bar label{padding:9px 11px;font-size:.80rem;}}
+  </style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>🫀 Cardiology Fellowship Funding Tracker</h1>
+  <div class="hdr-sub">Research Awards for General Cardiology Fellows — Clinical · Basic Science · Translational</div>
+  <div class="hdr-sync">Last synced: <em><!-- BEGIN:LAST-CHECKED -->Never — run the weekly scheduled task to populate live statuses<!-- END:LAST-CHECKED --></em></div>
+</div>
+
+<div class="app">
+
+  <!-- CSS tab controls — direct children of .app -->
+  <input type="radio" id="t-awards"   name="tabs" checked>
+  <input type="radio" id="t-timeline" name="tabs">
+  <input type="radio" id="t-calendar" name="tabs">
+  <input type="radio" id="t-tips"     name="tabs">
+
+  <div class="tab-bar">
+    <label for="t-awards">All Awards</label>
+    <label for="t-timeline">Fellowship Timeline</label>
+    <label for="t-calendar">Deadline Calendar</label>
+    <label for="t-tips">Tips &amp; Strategy</label>
+  </div>
+
+  <!-- ════════════════════════════════════════════ AWARDS TAB -->
+  <div class="section" id="sec-awards"><div class="main">
+
+    <!-- Status banner -->
+    <div class="status-banner" id="status-banner">
+<!-- BEGIN:STATUS-BANNER -->
+      <div class="sb-card"><div class="sb-dot dot-open"></div><div><div class="sb-num num-open" id="cnt-open">—</div><div class="sb-lbl">Open Now</div></div></div>
+      <div class="sb-card"><div class="sb-dot dot-announced"></div><div><div class="sb-num num-announced" id="cnt-announced">—</div><div class="sb-lbl">Announced</div></div></div>
+      <div class="sb-card"><div class="sb-dot dot-closed"></div><div><div class="sb-num num-closed" id="cnt-closed">—</div><div class="sb-lbl">Closed / TBA</div></div></div>
+      <div class="sb-card"><div class="sb-dot dot-unknown"></div><div><div class="sb-num num-unknown" id="cnt-unknown">19</div><div class="sb-lbl">Not Yet Checked</div></div></div>
+<!-- END:STATUS-BANNER -->
+    </div>
+
+    <!-- Alert strip: pre-rendered by scheduled task -->
+<!-- BEGIN:ALERT-STRIP -->
+<!-- END:ALERT-STRIP -->
+
+    <!-- Filter bar: hidden until JS loads -->
+    <div id="filter-bar">
+      <div class="filter-group">
+        <span class="filter-label">Type:</span>
+        <button class="fbtn active" data-filter="type" data-val="all">All</button>
+        <button class="fbtn" data-filter="type" data-val="clinical">Clinical</button>
+        <button class="fbtn" data-filter="type" data-val="basic">Basic Sci.</button>
+        <button class="fbtn" data-filter="type" data-val="translational">Translational</button>
+        <button class="fbtn" data-filter="type" data-val="any">Any</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Status:</span>
+        <button class="fbtn active" data-filter="status" data-val="all">All</button>
+        <button class="fbtn f-open" data-filter="status" data-val="open">🟢 Open</button>
+        <button class="fbtn f-announced" data-filter="status" data-val="announced">🟡 Announced</button>
+        <button class="fbtn f-closed" data-filter="status" data-val="closed">🔴 Closed</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Source:</span>
+        <button class="fbtn active" data-filter="src" data-val="all">All</button>
+        <button class="fbtn" data-filter="src" data-val="society">Society</button>
+        <button class="fbtn" data-filter="src" data-val="nih">NIH</button>
+        <button class="fbtn" data-filter="src" data-val="private">Private</button>
+      </div>
+      <input id="search-box" placeholder="🔍 Search awards…" type="search" autocomplete="off"/>
+      <span class="result-count" id="result-count"></span>
+    </div>
+
+    <!-- Award table -->
+    <div class="table-wrap">
+      <table id="award-table">
+        <thead><tr>
+          <th>Award</th>
+          <th>Organization</th>
+          <th>Type</th>
+          <th class="sortable" data-col="3">Amount</th>
+          <th>Status</th>
+          <th>Deadline / Cycle</th>
+          <th class="sortable" data-col="6">Typical Window</th>
+          <th>Fllw. Year</th>
+          <th>Eligibility</th>
+          <th>Link</th>
+        </tr></thead>
+        <tbody id="award-tbody">
+<!-- BEGIN:AWARD-ROWS -->
+          <tr data-type="clinical" data-status="unknown" data-src="society">
+            <td><strong>ACC/ABC Merck Research Fellowship</strong> <span class="badge b-top">⭐ Top Pick</span></td>
+            <td>ACC + ABC + Merck</td>
+            <td><span class="badge b-clinical">Clinical</span></td>
+            <td class="amt">$100,000</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~June</td>
+            <td><span class="yr yr1">Y1</span><span class="yr yr2">Y2</span></td>
+            <td class="elig">Current CV fellowship trainee; 3 awards; salary support for full-time research year starting August</td>
+            <td><a class="lnk" href="https://www.acc.org/Membership/Join-Us/Benefits/Award-Programs/ACC-ABC-Merck-Research-Fellowship-Award" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="any" data-status="unknown" data-src="society">
+            <td><strong>ACC Young Investigator Award</strong></td>
+            <td>ACC</td>
+            <td><span class="badge b-any">Any Type</span></td>
+            <td class="amt">Travel + recognition</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~Aug 25</td>
+            <td><span class="yr yr1">Y1</span><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
+            <td class="elig">Residents/fellows or ≤3 yrs post-training; 3 categories: Clinical, Basic/Translational, Outcomes; 15 finalists present at ACC annual meeting</td>
+            <td><a class="lnk" href="https://www.acc.org/Membership/Join-Us/Benefits/Award-Programs/Young-Investigator-Awards" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="basic" data-status="unknown" data-src="society">
+            <td><strong>HRS Research Fellowship Scholarship</strong> <span class="badge b-top">⭐ Top Pick</span></td>
+            <td>Heart Rhythm Society</td>
+            <td><span class="badge b-basic">Basic Sci.</span> <span class="badge b-clinical">Clinical</span></td>
+            <td class="amt">$75,000</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~Dec 3</td>
+            <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
+            <td class="elig">4 awards (2 basic, 2 clinical); ≤5 yrs cumulative post-training research; cardiac EP focus; starts July 1</td>
+            <td><a class="lnk" href="https://www.hrsonline.org/award-scholarship/research-fellowship-scholarships/" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="any" data-status="unknown" data-src="society">
+            <td><strong>AHA Postdoctoral Fellowship</strong></td>
+            <td>American Heart Association</td>
+            <td><span class="badge b-any">Any Type</span></td>
+            <td class="amt">NIH stipend + $12,200/yr</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~Aug 5</td>
+            <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">Postdoctoral (not independent faculty); CV or brain health focus; not enrolled in doctoral degree; ProposalCentral submission</td>
+            <td><a class="lnk" href="https://professional.heart.org/en/research-programs/aha-funding-opportunities/postdoctoral-fellowship" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="any" data-status="unknown" data-src="society">
+            <td><strong>AHA Career Development Award</strong> <span class="badge b-top">⭐ Top Pick</span></td>
+            <td>American Heart Association</td>
+            <td><span class="badge b-any">Any Type</span></td>
+            <td class="amt">Up to $231,000</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~Dec 1</td>
+            <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">First faculty appointment ≤6 yrs; postdocs can apply but need faculty role by activation; primary + secondary mentor required</td>
+            <td><a class="lnk" href="https://professional.heart.org/en/research-programs/aha-funding-opportunities/career-development-award" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="any" data-status="unknown" data-src="society">
+            <td><strong>AHA Innovative Project Award</strong></td>
+            <td>American Heart Association</td>
+            <td><span class="badge b-any">Any Type</span></td>
+            <td class="amt">$100,000/yr</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">Varies</td>
+            <td><span class="yr yrp">Post</span></td>
+            <td class="elig">Beyond fellowship/training stage; faculty appointment required; 10% indirect costs included</td>
+            <td><a class="lnk" href="https://professional.heart.org/en/research-programs/aha-funding-opportunities/innovative-project-award" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="clinical" data-status="unknown" data-src="society">
+            <td><strong>SCAI Early Career Research Grant</strong></td>
+            <td>SCAI</td>
+            <td><span class="badge b-clinical">Clinical</span></td>
+            <td class="amt">1 year support</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">Opens ~Nov</td>
+            <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">SCAI member; ≤10 yrs post-IC fellowship; interventional cardiology focus; present at SCAI Sessions following year</td>
+            <td><a class="lnk" href="https://www.scai.org/membership/career-development/early-career-research-grants" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="clinical" data-status="unknown" data-src="society">
+            <td><strong>HFSA Fellowship Research Grant</strong></td>
+            <td>Heart Failure Society of America</td>
+            <td><span class="badge b-clinical">Clinical</span></td>
+            <td class="amt">Up to $10,000</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">Varies</td>
+            <td><span class="yr yr1">Y1</span><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
+            <td class="elig">Up to 8 awards; ≤7 yrs postdoctoral; heart failure clinical research; adult and pediatric programs</td>
+            <td><a class="lnk" href="https://hfsa.org/clinical-research-grants" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="any" data-status="unknown" data-src="society">
+            <td><strong>HFSA Emerging Leader Grant</strong></td>
+            <td>HFSA / HF Research Foundation</td>
+            <td><span class="badge b-any">Any Type</span></td>
+            <td class="amt">Up to $250,000/yr</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">Varies</td>
+            <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">Emerging investigator; transformative HF research; inaugural class May 2025; check HFSA for current RFP</td>
+            <td><a class="lnk" href="https://hfsa.org/research/heart-failure-research-foundation" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="clinical" data-status="unknown" data-src="society">
+            <td><strong>ASNC Clinical Research Grant</strong></td>
+            <td>American Society of Nuclear Cardiology</td>
+            <td><span class="badge b-clinical">Clinical</span></td>
+            <td class="amt">$25,000</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">Varies</td>
+            <td><span class="yr yr1">Y1</span><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
+            <td class="elig">Fellows-in-training, early-career physicians/scientists or technologists; nuclear cardiology focus</td>
+            <td><a class="lnk" href="https://www.asnc.org/careers/awards/asnc-clinical-research-grants/" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="translational" data-status="unknown" data-src="society">
+            <td><strong>ASNC Discover Grant</strong></td>
+            <td>American Society of Nuclear Cardiology</td>
+            <td><span class="badge b-translational">Translational</span></td>
+            <td class="amt">$75,000</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">Results ~Feb</td>
+            <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">MD, PhD, or equivalent; ASNC member ≥3 consecutive years; nuclear cardiology focus</td>
+            <td><a class="lnk" href="https://www.asnc.org/careers/awards/asnc-discover-grant/" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="clinical" data-status="unknown" data-src="private">
+            <td><strong>ASNC/Pfizer Cardiac Amyloidosis Award</strong></td>
+            <td>ASNC + Pfizer</td>
+            <td><span class="badge b-clinical">Clinical</span></td>
+            <td class="amt">$25,000</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">Varies</td>
+            <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
+            <td class="elig">Nuclear cardiology + amyloidosis research focus; early career investigator</td>
+            <td><a class="lnk" href="https://www.asnc.org/careers/awards/asnc-pfizer-young-investigator-in-cardiac-amyloidosis-research-fellowship-award/" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="clinical" data-status="unknown" data-src="society">
+            <td><strong>ASE/ASEF EDGES Research Grant</strong></td>
+            <td>ASE Foundation</td>
+            <td><span class="badge b-clinical">Clinical</span></td>
+            <td class="amt">$25,000</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~Annual</td>
+            <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
+            <td class="elig">Early career; cardiovascular ultrasound/echo focus; addresses clinical gaps</td>
+            <td><a class="lnk" href="https://www.asecho.org/what-we-do/awards-and-scholarships/" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="clinical" data-status="unknown" data-src="society">
+            <td><strong>ASE Pamela S. Douglas Research Scholar Award</strong></td>
+            <td>American Society of Echocardiography</td>
+            <td><span class="badge b-clinical">Clinical</span></td>
+            <td class="amt">Scholar award</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~March 3</td>
+            <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
+            <td class="elig">Echocardiography research; early career investigator</td>
+            <td><a class="lnk" href="https://www.asecho.org/what-we-do/awards-and-scholarships/" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="any" data-status="announced" data-src="nih">
+            <td><strong>NIH F32 — Postdoctoral Fellowship (NRSA)</strong></td>
+            <td>NIH / NHLBI</td>
+            <td><span class="badge b-any">Any Type</span></td>
+            <td class="amt">NIH stipend scale</td>
+            <td><span class="pill pill-announced"><span class="pill-dot"></span>Announced</span></td>
+            <td class="dl-cell"><strong>Rolling</strong><br><small>Apr 8 / Aug 8 / Dec 8</small></td>
+            <td class="typ">3&times;/year</td>
+            <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
+            <td class="elig">Postdoctoral; US citizen/PR (most institutes); identify sponsoring mentor; 3 submission cycles/year</td>
+            <td><a class="lnk" href="https://grants.nih.gov/funding/activity-codes/F32" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="basic" data-status="announced" data-src="nih">
+            <td><strong>NIH K08 — Mentored Clinical Scientist Award</strong> <span class="badge b-top">⭐ Top Pick</span></td>
+            <td>NIH / NHLBI</td>
+            <td><span class="badge b-basic">Basic Sci.</span> <span class="badge b-translational">Translational</span></td>
+            <td class="amt">~$150–180K/yr</td>
+            <td><span class="pill pill-announced"><span class="pill-dot"></span>Announced</span></td>
+            <td class="dl-cell"><strong>Rolling</strong><br><small>Feb / Jun / Oct</small></td>
+            <td class="typ">3&times;/year</td>
+            <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">MD/DO; ≥75% protected time; basic or translational focus; no prior R01; mentored</td>
+            <td><a class="lnk" href="https://grants.nih.gov/grants/guide/pa-files/PA-24-182.html" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="clinical" data-status="announced" data-src="nih">
+            <td><strong>NIH K23 — Mentored Patient-Oriented Research Award</strong> <span class="badge b-top">⭐ Top Pick</span></td>
+            <td>NIH / NHLBI</td>
+            <td><span class="badge b-clinical">Clinical</span></td>
+            <td class="amt">~$150–180K/yr</td>
+            <td><span class="pill pill-announced"><span class="pill-dot"></span>Announced</span></td>
+            <td class="dl-cell"><strong>Rolling</strong><br><small>Feb / Jun / Oct</small></td>
+            <td class="typ">3&times;/year</td>
+            <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">MD/DO; direct patient interaction in research; ≥75% protected time; US citizen/PR only</td>
+            <td><a class="lnk" href="https://www.niaid.nih.gov/grants-contracts/understanding-research-career-development-k-award-specifics" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="any" data-status="announced" data-src="nih">
+            <td><strong>NIH K99/R00 — Pathway to Independence</strong></td>
+            <td>NIH / NHLBI</td>
+            <td><span class="badge b-any">Any Type</span></td>
+            <td class="amt">K99 ~$90K &#x2192; R00 ~$250K/yr</td>
+            <td><span class="pill pill-announced"><span class="pill-dot"></span>Announced</span></td>
+            <td class="dl-cell"><strong>Rolling</strong><br><small>Feb / Jun / Oct</small></td>
+            <td class="typ">3&times;/year</td>
+            <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">≤4 yrs postdoc at award; no prior faculty; leads to independent R00; open to non-citizens</td>
+            <td><a class="lnk" href="https://www.niaid.nih.gov/grants-contracts/choose-award-career-stage" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="translational" data-status="unknown" data-src="private">
+            <td><strong>Burroughs Wellcome Fund — CAMS</strong> <span class="badge b-top">⭐ Prestigious</span></td>
+            <td>Burroughs Wellcome Fund</td>
+            <td><span class="badge b-translational">Translational</span></td>
+            <td class="amt">$700,000</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~Oct 7</td>
+            <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">MD-PhD or equivalent; ≤13 yrs post-clinical doctorate; bridges mentored training to independence; US/Canada; physician-scientist</td>
+            <td><a class="lnk" href="https://www.bwfund.org/grants/biomedical-sciences/career-awards-for-medical-scientists/" target="_blank">Visit ↗</a></td>
+          </tr>
+<!-- END:AWARD-ROWS -->
+        </tbody>
+      </table>
+    </div>
+
+  </div></div><!-- /sec-awards -->
+
+  <!-- ═══════════════════════════════════════ TIMELINE TAB -->
+  <div class="section" id="sec-timeline"><div class="main">
+    <div class="note">📅 General Cardiology Fellowship = 3 years. Most fellows do a protected research block in Year 3 (or add a 4th dedicated research year). Apply for fellowship-specific awards in Years 1–2; begin NIH K-award writing in Year 2.</div>
+    <div class="tl-grid">
+      <div class="tl-col">
+        <div class="tl-hdr hdr-1">Year 1<div class="tl-sub">Foundation Building</div></div>
+        <div class="tl-body">
+          <div class="tl-item tl-act"><strong>Join ACC, AHA, HRS + specialty societies</strong><span>Membership required for most grants</span></div>
+          <div class="tl-item tl-act"><strong>Identify research mentor &amp; focus area</strong><span>Clinical, basic, or translational direction</span></div>
+          <div class="tl-item tl-dl"><strong>HFSA Fellowship Mini-Grant</strong><span>Up to $10K; open year-round if HF interest</span></div>
+          <div class="tl-item tl-dl"><strong>ASNC Clinical Research Grant</strong><span>$25K; if nuclear cardiology is relevant</span></div>
+          <div class="tl-item tl-dl"><strong>ACC Young Investigator Award (~Aug)</strong><span>Early abstracts can compete; great exposure</span></div>
+          <div class="tl-item tl-act"><strong>Develop project + IRB if needed</strong><span>Lead time for preliminary data</span></div>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-hdr hdr-2">Year 2<div class="tl-sub">Apply for Key Awards</div></div>
+        <div class="tl-body">
+          <div class="tl-item tl-dl"><strong>ACC/ABC Merck Fellowship (~June)</strong><span>$100K; prep starts February</span></div>
+          <div class="tl-item tl-dl"><strong>HRS Research Fellowship (~Dec)</strong><span>$75K; EP focus; basic or clinical track</span></div>
+          <div class="tl-item tl-dl"><strong>AHA Postdoctoral Fellowship (~Aug)</strong><span>NIH-matched stipend; identify mentor early</span></div>
+          <div class="tl-item tl-dl"><strong>ASE Douglas Scholar Award (~March)</strong><span>If echo-focused research</span></div>
+          <div class="tl-item tl-act"><strong>Begin NIH F32 planning</strong><span>Apr / Aug / Dec deadlines; pick target date</span></div>
+          <div class="tl-item tl-act"><strong>Draft K-award specific aims</strong><span>12–18 months to write well; start now</span></div>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-hdr hdr-3">Year 3 / Research Year<div class="tl-sub">Major Submissions</div></div>
+        <div class="tl-body">
+          <div class="tl-item tl-dl"><strong>NIH K23 or K08</strong><span>Submit Feb, Jun, or Oct; aim for first try during fellowship</span></div>
+          <div class="tl-item tl-dl"><strong>NIH F32 (if not yet funded)</strong><span>Apr / Aug / Dec; rolling cycles</span></div>
+          <div class="tl-item tl-dl"><strong>NIH K99/R00</strong><span>Must have ≤4 yrs postdoc; plan early</span></div>
+          <div class="tl-item tl-dl"><strong>AHA Career Development Award (~Dec)</strong><span>Approaching first faculty appointment</span></div>
+          <div class="tl-item tl-dl"><strong>Burroughs Wellcome CAMS (~Oct)</strong><span>$700K, 5 yrs; MD-PhD ideal</span></div>
+          <div class="tl-item tl-act"><strong>Generate preliminary data</strong><span>Critical for NIH K-award competitiveness</span></div>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-hdr hdr-p">Post-Fellowship<div class="tl-sub">Early Faculty</div></div>
+        <div class="tl-body">
+          <div class="tl-item tl-dl"><strong>NIH K08/K23 (if not yet funded)</strong><span>Submit as new faculty; 75% protected time required</span></div>
+          <div class="tl-item tl-dl"><strong>AHA Career Development Award</strong><span>≤6 yrs from first faculty appointment</span></div>
+          <div class="tl-item tl-dl"><strong>AHA Innovative Project Award</strong><span>$100K/yr; faculty-level; beyond training stage</span></div>
+          <div class="tl-item tl-dl"><strong>HFSA Emerging Leader Grant</strong><span>Up to $250K/yr; newer program</span></div>
+          <div class="tl-item tl-act"><strong>Transition to R01 planning</strong><span>Typically 2–3 yrs post-K award activation</span></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- ═══════════════════════════════════════ CALENDAR TAB -->
+  <div class="section" id="sec-calendar"><div class="main">
+    <div class="cal-wrap">
+      <p style="font-size:.82rem;color:var(--gray);margin-bottom:14px;">Typical annual deadline windows — verify on each organization's website as dates shift year to year.</p>
+      <div class="months">
+        <div class="mon"><div class="mon-name">JAN</div><div class="mon-body">
+          <div class="ci ci-gr">Watch for ACC Merck opening</div>
+          <div class="ci ci-b">NIH F32 prep (Apr)</div>
+        </div></div>
+        <div class="mon"><div class="mon-name">FEB</div><div class="mon-body">
+          <div class="ci ci-r">NIH K08/K23/K99</div>
+          <div class="ci ci-b">Begin ACC Merck app</div>
+        </div></div>
+        <div class="mon"><div class="mon-name">MAR</div><div class="mon-body">
+          <div class="ci ci-g">ASE Douglas Award (~Mar 3)</div>
+          <div class="ci ci-gr">HRS notifications</div>
+          <div class="ci ci-b">ACC Annual Sessions</div>
+        </div></div>
+        <div class="mon"><div class="mon-name">APR</div><div class="mon-body">
+          <div class="ci ci-r">NIH F32 (Apr 8)</div>
+          <div class="ci ci-b">Finalize ACC Merck</div>
+        </div></div>
+        <div class="mon"><div class="mon-name">MAY</div><div class="mon-body">
+          <div class="ci ci-b">HRS Annual Sessions</div>
+          <div class="ci ci-b">SCAI Sessions</div>
+          <div class="ci ci-gr">Monitor HFSA</div>
+        </div></div>
+        <div class="mon"><div class="mon-name">JUN</div><div class="mon-body">
+          <div class="ci ci-r">ACC/ABC Merck (~Jun 11)</div>
+          <div class="ci ci-r">NIH K08/K23/K99</div>
+          <div class="ci ci-r">NIH F32 (Jun 8)</div>
+        </div></div>
+        <div class="mon"><div class="mon-name">JUL</div><div class="mon-body">
+          <div class="ci ci-g">HRS fellowship begins</div>
+          <div class="ci ci-b">AHA cycle opens</div>
+        </div></div>
+        <div class="mon"><div class="mon-name">AUG</div><div class="mon-body">
+          <div class="ci ci-o">ACC Young Investigator (~Aug 25)</div>
+          <div class="ci ci-o">AHA Postdoc (~Aug 5)</div>
+          <div class="ci ci-r">NIH F32 (Aug 8)</div>
+        </div></div>
+        <div class="mon"><div class="mon-name">SEP</div><div class="mon-body">
+          <div class="ci ci-b">HFSA Annual Meeting</div>
+          <div class="ci ci-gr">Begin BWF CAMS prep</div>
+        </div></div>
+        <div class="mon"><div class="mon-name">OCT</div><div class="mon-body">
+          <div class="ci ci-o">BWF CAMS (~Oct 7)</div>
+          <div class="ci ci-r">NIH K08/K23/K99</div>
+          <div class="ci ci-b">Begin Dec F32 prep</div>
+        </div></div>
+        <div class="mon"><div class="mon-name">NOV</div><div class="mon-body">
+          <div class="ci ci-o">SCAI ECRG opens</div>
+          <div class="ci ci-b">HRS site opens</div>
+          <div class="ci ci-gr">AHA Sessions</div>
+        </div></div>
+        <div class="mon"><div class="mon-name">DEC</div><div class="mon-body">
+          <div class="ci ci-r">HRS Fellowship (~Dec 3)</div>
+          <div class="ci ci-r">AHA Career Dev (~Dec 1)</div>
+          <div class="ci ci-r">NIH F32 (Dec 8)</div>
+        </div></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- ═══════════════════════════════════════ TIPS TAB -->
+  <div class="section" id="sec-tips"><div class="main">
+    <div class="tips-grid">
+      <div class="tip-card">
+        <h3>📋 General Strategy</h3>
+        <p><strong>Start early, aim big.</strong> The ACC/ABC Merck and HRS scholarships are the most fellow-friendly large awards — apply in Years 1–2 to fund a protected Year 3 research block.</p><br>
+        <p><strong>Society membership matters.</strong> Join ACC, AHA, and the specialty society most aligned with your research (HRS, HFSA, SCAI, ASNC, ASE) at the start of fellowship.</p><br>
+        <p><strong>The K-award timeline.</strong> NIH K08/K23 take 12–18 months to write well. Start developing specific aims by mid-Year 2 so you can submit before or during your research year.</p><br>
+        <p><strong>Parallel tracking.</strong> Many fellows secure a society fellowship award to fund their research year while simultaneously developing their NIH K-award. These are complementary, not competing.</p><br>
+        <p><strong>Preliminary data wins.</strong> Even small pilot studies or retrospective analyses significantly strengthen NIH applications.</p>
+      </div>
+      <div class="tip-card">
+        <h3>🏆 Priority by Research Track</h3>
+        <p><strong>🫀 Clinical / Outcomes:</strong></p>
+        <ul><li>ACC/ABC Merck ($100K)</li><li>NIH K23 ($150–180K/yr, 3–5 yrs)</li><li>AHA Postdoc → AHA Career Development Award</li><li>HFSA Fellowship Grant (if HF focus)</li></ul><br>
+        <p><strong>🔬 Basic Science / Translational:</strong></p>
+        <ul><li>ACC/ABC Merck ($100K)</li><li>HRS Research Fellowship – Basic track ($75K)</li><li>NIH K08 (mentored clinical scientist)</li><li>NIH K99/R00 (pathway to independence)</li><li>Burroughs Wellcome CAMS ($700K)</li></ul><br>
+        <p><strong>⚡ Electrophysiology:</strong></p>
+        <ul><li>HRS Research Fellowship (best fit)</li><li>ACC/ABC Merck + NIH K award in parallel</li></ul><br>
+        <p><strong>🖼️ Imaging (Echo / Nuclear):</strong></p>
+        <ul><li>ASE EDGES Grant or Douglas Scholar Award</li><li>ASNC Clinical Grant / Discover Grant</li><li>ASNC/Pfizer Amyloidosis Award (if amyloid focus)</li></ul>
+      </div>
+      <div class="tip-card" style="grid-column:1/-1">
+        <h3>🔗 Key Websites</h3>
+        <div class="links-grid">
+          <div><strong>ACC Awards Hub</strong><br><a href="https://www.acc.org/Membership/Join-Us/Benefits/Award-Programs" target="_blank" style="color:var(--blue)">acc.org ↗</a></div>
+          <div><strong>AHA Funding Opportunities</strong><br><a href="https://professional.heart.org/en/research-programs/aha-funding-opportunities" target="_blank" style="color:var(--blue)">professional.heart.org ↗</a></div>
+          <div><strong>HRS Awards &amp; Scholarships</strong><br><a href="https://www.hrsonline.org/career-development/awards-scholarships/" target="_blank" style="color:var(--blue)">hrsonline.org ↗</a></div>
+          <div><strong>NHLBI Training &amp; Career Dev</strong><br><a href="https://www.nhlbi.nih.gov/grants-and-training/training-and-career-development" target="_blank" style="color:var(--blue)">nhlbi.nih.gov ↗</a></div>
+          <div><strong>SCAI Early Career Grants</strong><br><a href="https://www.scai.org/membership/career-development/early-career-research-grants" target="_blank" style="color:var(--blue)">scai.org ↗</a></div>
+          <div><strong>HFSA Clinical Research Grants</strong><br><a href="https://hfsa.org/clinical-research-grants" target="_blank" style="color:var(--blue)">hfsa.org ↗</a></div>
+          <div><strong>ASNC Awards &amp; Grants</strong><br><a href="https://www.asnc.org/careers/awards/" target="_blank" style="color:var(--blue)">asnc.org ↗</a></div>
+          <div><strong>Burroughs Wellcome CAMS</strong><br><a href="https://www.bwfund.org/grants/biomedical-sciences/career-awards-for-medical-scientists/" target="_blank" style="color:var(--blue)">bwfund.org ↗</a></div>
+          <div><strong>NIH K Award Overview</strong><br><a href="https://www.niaid.nih.gov/grants-contracts/choose-award-career-stage" target="_blank" style="color:var(--blue)">niaid.nih.gov ↗</a></div>
+          <div><strong>NIH F32 Fellowship</strong><br><a href="https://grants.nih.gov/funding/activity-codes/F32" target="_blank" style="color:var(--blue)">grants.nih.gov ↗</a></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+
+</div><!-- /app -->
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PROGRESSIVE ENHANCEMENT — runs only if JavaScript is available.
+     OneDrive preview blocks this; the CSS-only experience above works
+     without it. Local/browser open gets full interactivity.
+     ═══════════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+  var tbody   = document.getElementById('award-tbody');
+  var filterBar = document.getElementById('filter-bar');
+  var searchBox = document.getElementById('search-box');
+  var resultCount = document.getElementById('result-count');
+  if (!tbody) return;
+
+  // Show filter bar now that JS is running
+  filterBar.style.display = 'flex';
+
+  var state = { type:'all', status:'all', src:'all', q:'' };
+
+  // ── Filter buttons ─────────────────────────────────────
+  filterBar.querySelectorAll('.fbtn[data-filter]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var key = this.getAttribute('data-filter');
+      var val = this.getAttribute('data-val');
+      state[key] = val;
+      // Deactivate siblings in same group
+      filterBar.querySelectorAll('.fbtn[data-filter="' + key + '"]').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      this.classList.add('active');
+      applyFilters();
+    });
+  });
+
+  // ── Search box ─────────────────────────────────────────
+  searchBox.addEventListener('input', function() {
+    state.q = this.value.toLowerCase().trim();
+    applyFilters();
+  });
+
+  // ── Apply all filters ──────────────────────────────────
+  function applyFilters() {
+    var rows = tbody.querySelectorAll('tr');
+    var counts = { open:0, announced:0, closed:0, unknown:0 };
+    var visible = 0;
+    var total = rows.length;
+
+    rows.forEach(function(row) {
+      var type   = row.getAttribute('data-type')   || '';
+      var status = row.getAttribute('data-status') || 'unknown';
+      var src    = row.getAttribute('data-src')    || '';
+      var text   = row.textContent.toLowerCase();
+
+      var show =
+        (state.type   === 'all' || type   === state.type) &&
+        (state.status === 'all' || status === state.status) &&
+        (state.src    === 'all' || src    === state.src) &&
+        (!state.q || text.includes(state.q));
+
+      row.classList.toggle('hidden-row', !show);
+      if (show) {
+        visible++;
+        counts[status] = (counts[status] || 0) + 1;
+      }
+    });
+
+    // Update result count label
+    resultCount.textContent = visible < total
+      ? 'Showing ' + visible + ' of ' + total : '';
+
+    // Update status banner counts dynamically
+    var o = document.getElementById('cnt-open');
+    var a = document.getElementById('cnt-announced');
+    var c = document.getElementById('cnt-closed');
+    var u = document.getElementById('cnt-unknown');
+    if (o) o.textContent = counts.open      || 0;
+    if (a) a.textContent = counts.announced || 0;
+    if (c) c.textContent = counts.closed    || 0;
+    if (u) u.textContent = counts.unknown   || 0;
+
+    // Show/hide no-results row
+    var noResults = tbody.querySelector('.no-results-row');
+    if (visible === 0) {
+      if (!noResults) {
+        var tr = document.createElement('tr');
+        tr.className = 'no-results-row';
+        tr.innerHTML = '<td colspan="10" class="no-results">No awards match your filters. Try broadening your search.</td>';
+        tbody.appendChild(tr);
+      }
+    } else {
+      if (noResults) noResults.remove();
+    }
+  }
+
+  // ── Clickable status banner cards act as filters ───────
+  var pills = [
+    { id:'cnt-open',      status:'open' },
+    { id:'cnt-announced', status:'announced' },
+    { id:'cnt-closed',    status:'closed' },
+    { id:'cnt-unknown',   status:'unknown' },
+  ];
+  pills.forEach(function(p) {
+    var el = document.getElementById(p.id);
+    if (!el) return;
+    var card = el.closest('.sb-card');
+    if (!card) return;
+    card.style.cursor = 'pointer';
+    card.title = 'Click to filter by this status';
+    card.addEventListener('click', function() {
+      // Toggle: if already filtering by this status, clear it
+      var newVal = state.status === p.status ? 'all' : p.status;
+      state.status = newVal;
+      // Sync filter buttons
+      filterBar.querySelectorAll('.fbtn[data-filter="status"]').forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-val') === newVal);
+      });
+      applyFilters();
+    });
+  });
+
+  // ── Init counts from rendered data-status attributes ───
+  applyFilters();
+
+})();
+</script>
+</body>
+</html>
