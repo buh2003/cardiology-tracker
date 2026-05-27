@@ -206,7 +206,7 @@
 <div class="hdr">
   <h1>🫀 Cardiology Fellowship Funding Tracker</h1>
   <div class="hdr-sub">Research Awards for General Cardiology Fellows — Clinical · Basic Science · Translational</div>
-  <div class="hdr-sync">Last synced: <em><!-- BEGIN:LAST-CHECKED -->Never — run the weekly scheduled task to populate live statuses<!-- END:LAST-CHECKED --></em></div>
+  <div class="hdr-sync">Last synced: <em><!-- BEGIN:LAST-CHECKED -->May 26, 2026 at 3:56 PM<!-- END:LAST-CHECKED --></em></div>
 </div>
 
 <div class="app">
@@ -230,15 +230,22 @@
     <!-- Status banner -->
     <div class="status-banner" id="status-banner">
 <!-- BEGIN:STATUS-BANNER -->
-      <div class="sb-card"><div class="sb-dot dot-open"></div><div><div class="sb-num num-open" id="cnt-open">—</div><div class="sb-lbl">Open Now</div></div></div>
-      <div class="sb-card"><div class="sb-dot dot-announced"></div><div><div class="sb-num num-announced" id="cnt-announced">—</div><div class="sb-lbl">Announced</div></div></div>
-      <div class="sb-card"><div class="sb-dot dot-closed"></div><div><div class="sb-num num-closed" id="cnt-closed">—</div><div class="sb-lbl">Closed / TBA</div></div></div>
-      <div class="sb-card"><div class="sb-dot dot-unknown"></div><div><div class="sb-num num-unknown" id="cnt-unknown">19</div><div class="sb-lbl">Not Yet Checked</div></div></div>
+      <div class="sb-card"><div class="sb-dot dot-open"></div><div><div class="sb-num num-open" id="cnt-open">4</div><div class="sb-lbl">Open Now</div></div></div>
+      <div class="sb-card"><div class="sb-dot dot-announced"></div><div><div class="sb-num num-announced" id="cnt-announced">4</div><div class="sb-lbl">Announced</div></div></div>
+      <div class="sb-card"><div class="sb-dot dot-closed"></div><div><div class="sb-num num-closed" id="cnt-closed">11</div><div class="sb-lbl">Closed / TBA</div></div></div>
+      <div class="sb-card"><div class="sb-dot dot-unknown"></div><div><div class="sb-num num-unknown" id="cnt-unknown">8</div><div class="sb-lbl">Not Yet Checked</div></div></div>
 <!-- END:STATUS-BANNER -->
     </div>
 
     <!-- Alert strip: pre-rendered by scheduled task -->
 <!-- BEGIN:ALERT-STRIP -->
+    <div class="alert-strip">
+      <h4>⏰ Action Required — Deadlines Within 60 Days</h4>
+      <div class="alert-item"><span class="days-chip">17d</span><a href="https://grants.nih.gov/grants/guide/pa-files/PA-24-182.html" target="_blank">NIH K08 — Mentored Clinical Scientist Award</a><span class="alert-dl"> — due Jun 12, 2026</span></div>
+      <div class="alert-item"><span class="days-chip">17d</span><a href="https://www.niaid.nih.gov/grants-contracts/understanding-research-career-development-k-award-specifics" target="_blank">NIH K23 — Mentored Patient-Oriented Research Award</a><span class="alert-dl"> — due Jun 12, 2026</span></div>
+      <div class="alert-item"><span class="days-chip">17d</span><a href="https://www.niaid.nih.gov/grants-contracts/choose-award-career-stage" target="_blank">NIH K99/R00 — Pathway to Independence</a><span class="alert-dl"> — due Jun 12, 2026</span></div>
+      <div class="alert-item"><span class="days-chip">36d</span><a href="https://www.asecho.org/what-we-do/awards-and-scholarships/" target="_blank">ASE/ASEF EDGES Research Grant</a><span class="alert-dl"> — due Jul 1, 2026</span></div>
+    </div>
 <!-- END:ALERT-STRIP -->
 
     <!-- Filter bar: hidden until JS loads -->
@@ -264,6 +271,7 @@
         <button class="fbtn" data-filter="src" data-val="society">Society</button>
         <button class="fbtn" data-filter="src" data-val="nih">NIH</button>
         <button class="fbtn" data-filter="src" data-val="private">Private</button>
+        <button class="fbtn" data-filter="src" data-val="internal">UCSD Internal</button>
       </div>
       <input id="search-box" placeholder="🔍 Search awards…" type="search" autocomplete="off"/>
       <span class="result-count" id="result-count"></span>
@@ -286,84 +294,84 @@
         </tr></thead>
         <tbody id="award-tbody">
 <!-- BEGIN:AWARD-ROWS -->
-          <tr data-type="clinical" data-status="unknown" data-src="society">
+          <tr data-type="clinical" data-status="closed" data-src="society">
             <td><strong>ACC/ABC Merck Research Fellowship</strong> <span class="badge b-top">⭐ Top Pick</span></td>
             <td>ACC + ABC + Merck</td>
             <td><span class="badge b-clinical">Clinical</span></td>
             <td class="amt">$100,000</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td><span class="pill pill-closed"><span class="pill-dot"></span>Closed</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">~June</td>
             <td><span class="yr yr1">Y1</span><span class="yr yr2">Y2</span></td>
             <td class="elig">Current CV fellowship trainee; 3 awards; salary support for full-time research year starting August</td>
             <td><a class="lnk" href="https://www.acc.org/Membership/Join-Us/Benefits/Award-Programs/ACC-ABC-Merck-Research-Fellowship-Award" target="_blank">Visit ↗</a></td>
           </tr>
-          <tr data-type="any" data-status="unknown" data-src="society">
+          <tr data-type="any" data-status="closed" data-src="society">
             <td><strong>ACC Young Investigator Award</strong></td>
             <td>ACC</td>
             <td><span class="badge b-any">Any Type</span></td>
             <td class="amt">Travel + recognition</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td><span class="pill pill-closed"><span class="pill-dot"></span>Closed</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">~Aug 25</td>
             <td><span class="yr yr1">Y1</span><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
             <td class="elig">Residents/fellows or ≤3 yrs post-training; 3 categories: Clinical, Basic/Translational, Outcomes; 15 finalists present at ACC annual meeting</td>
             <td><a class="lnk" href="https://www.acc.org/Membership/Join-Us/Benefits/Award-Programs/Young-Investigator-Awards" target="_blank">Visit ↗</a></td>
           </tr>
-          <tr data-type="basic" data-status="unknown" data-src="society">
+          <tr data-type="basic" data-status="closed" data-src="society">
             <td><strong>HRS Research Fellowship Scholarship</strong> <span class="badge b-top">⭐ Top Pick</span></td>
             <td>Heart Rhythm Society</td>
             <td><span class="badge b-basic">Basic Sci.</span> <span class="badge b-clinical">Clinical</span></td>
             <td class="amt">$75,000</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td><span class="pill pill-closed"><span class="pill-dot"></span>Closed</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">~Dec 3</td>
             <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
             <td class="elig">4 awards (2 basic, 2 clinical); ≤5 yrs cumulative post-training research; cardiac EP focus; starts July 1</td>
             <td><a class="lnk" href="https://www.hrsonline.org/award-scholarship/research-fellowship-scholarships/" target="_blank">Visit ↗</a></td>
           </tr>
-          <tr data-type="any" data-status="unknown" data-src="society">
+          <tr data-type="any" data-status="open" data-src="society">
             <td><strong>AHA Postdoctoral Fellowship</strong></td>
             <td>American Heart Association</td>
             <td><span class="badge b-any">Any Type</span></td>
             <td class="amt">NIH stipend + $12,200/yr</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
-            <td class="dl-cell">—</td>
+            <td><span class="pill pill-open"><span class="pill-dot"></span>Open</span></td>
+            <td class="dl-cell"><strong>August 5, 2026</strong><br><small>2027 cycle</small></td>
             <td class="typ">~Aug 5</td>
             <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
             <td class="elig">Postdoctoral (not independent faculty); CV or brain health focus; not enrolled in doctoral degree; ProposalCentral submission</td>
             <td><a class="lnk" href="https://professional.heart.org/en/research-programs/aha-funding-opportunities/postdoctoral-fellowship" target="_blank">Visit ↗</a></td>
           </tr>
-          <tr data-type="any" data-status="unknown" data-src="society">
+          <tr data-type="any" data-status="closed" data-src="society">
             <td><strong>AHA Career Development Award</strong> <span class="badge b-top">⭐ Top Pick</span></td>
             <td>American Heart Association</td>
             <td><span class="badge b-any">Any Type</span></td>
             <td class="amt">Up to $231,000</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td><span class="pill pill-closed"><span class="pill-dot"></span>Closed</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">~Dec 1</td>
             <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
             <td class="elig">First faculty appointment ≤6 yrs; postdocs can apply but need faculty role by activation; primary + secondary mentor required</td>
             <td><a class="lnk" href="https://professional.heart.org/en/research-programs/aha-funding-opportunities/career-development-award" target="_blank">Visit ↗</a></td>
           </tr>
-          <tr data-type="any" data-status="unknown" data-src="society">
+          <tr data-type="any" data-status="closed" data-src="society">
             <td><strong>AHA Innovative Project Award</strong></td>
             <td>American Heart Association</td>
             <td><span class="badge b-any">Any Type</span></td>
             <td class="amt">$100,000/yr</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td><span class="pill pill-closed"><span class="pill-dot"></span>Closed</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">Varies</td>
             <td><span class="yr yrp">Post</span></td>
             <td class="elig">Beyond fellowship/training stage; faculty appointment required; 10% indirect costs included</td>
             <td><a class="lnk" href="https://professional.heart.org/en/research-programs/aha-funding-opportunities/innovative-project-award" target="_blank">Visit ↗</a></td>
           </tr>
-          <tr data-type="clinical" data-status="unknown" data-src="society">
+          <tr data-type="clinical" data-status="closed" data-src="society">
             <td><strong>SCAI Early Career Research Grant</strong></td>
             <td>SCAI</td>
             <td><span class="badge b-clinical">Clinical</span></td>
             <td class="amt">1 year support</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td><span class="pill pill-closed"><span class="pill-dot"></span>Closed</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">Opens ~Nov</td>
             <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
@@ -375,79 +383,79 @@
             <td>Heart Failure Society of America</td>
             <td><span class="badge b-clinical">Clinical</span></td>
             <td class="amt">Up to $10,000</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Unknown</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">Varies</td>
             <td><span class="yr yr1">Y1</span><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
             <td class="elig">Up to 8 awards; ≤7 yrs postdoctoral; heart failure clinical research; adult and pediatric programs</td>
-            <td><a class="lnk" href="https://hfsa.org/clinical-research-grants" target="_blank">Visit ↗</a></td>
+            <td><a class="lnk" href="https://www.hfsa.org/fellowship-research-grants-available" target="_blank">Visit ↗</a></td>
           </tr>
           <tr data-type="any" data-status="unknown" data-src="society">
             <td><strong>HFSA Emerging Leader Grant</strong></td>
             <td>HFSA / HF Research Foundation</td>
             <td><span class="badge b-any">Any Type</span></td>
-            <td class="amt">Up to $250,000/yr</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="amt">Up to $150,000/yr</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Unknown</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">Varies</td>
             <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
             <td class="elig">Emerging investigator; transformative HF research; inaugural class May 2025; check HFSA for current RFP</td>
             <td><a class="lnk" href="https://hfsa.org/research/heart-failure-research-foundation" target="_blank">Visit ↗</a></td>
           </tr>
-          <tr data-type="clinical" data-status="unknown" data-src="society">
+          <tr data-type="clinical" data-status="closed" data-src="society">
             <td><strong>ASNC Clinical Research Grant</strong></td>
             <td>American Society of Nuclear Cardiology</td>
             <td><span class="badge b-clinical">Clinical</span></td>
             <td class="amt">$25,000</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td><span class="pill pill-closed"><span class="pill-dot"></span>Closed</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">Varies</td>
             <td><span class="yr yr1">Y1</span><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
             <td class="elig">Fellows-in-training, early-career physicians/scientists or technologists; nuclear cardiology focus</td>
             <td><a class="lnk" href="https://www.asnc.org/careers/awards/asnc-clinical-research-grants/" target="_blank">Visit ↗</a></td>
           </tr>
-          <tr data-type="translational" data-status="unknown" data-src="society">
+          <tr data-type="translational" data-status="closed" data-src="society">
             <td><strong>ASNC Discover Grant</strong></td>
             <td>American Society of Nuclear Cardiology</td>
             <td><span class="badge b-translational">Translational</span></td>
             <td class="amt">$75,000</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td><span class="pill pill-closed"><span class="pill-dot"></span>Closed</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">Results ~Feb</td>
             <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
             <td class="elig">MD, PhD, or equivalent; ASNC member ≥3 consecutive years; nuclear cardiology focus</td>
             <td><a class="lnk" href="https://www.asnc.org/careers/awards/asnc-discover-grant/" target="_blank">Visit ↗</a></td>
           </tr>
-          <tr data-type="clinical" data-status="unknown" data-src="private">
+          <tr data-type="clinical" data-status="closed" data-src="private">
             <td><strong>ASNC/Pfizer Cardiac Amyloidosis Award</strong></td>
             <td>ASNC + Pfizer</td>
             <td><span class="badge b-clinical">Clinical</span></td>
             <td class="amt">$25,000</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td><span class="pill pill-closed"><span class="pill-dot"></span>Closed</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">Varies</td>
             <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
             <td class="elig">Nuclear cardiology + amyloidosis research focus; early career investigator</td>
             <td><a class="lnk" href="https://www.asnc.org/careers/awards/asnc-pfizer-young-investigator-in-cardiac-amyloidosis-research-fellowship-award/" target="_blank">Visit ↗</a></td>
           </tr>
-          <tr data-type="clinical" data-status="unknown" data-src="society">
+          <tr data-type="clinical" data-status="open" data-src="society">
             <td><strong>ASE/ASEF EDGES Research Grant</strong></td>
             <td>ASE Foundation</td>
             <td><span class="badge b-clinical">Clinical</span></td>
             <td class="amt">$25,000</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
-            <td class="dl-cell">—</td>
+            <td><span class="pill pill-open"><span class="pill-dot"></span>Open</span></td>
+            <td class="dl-cell"><strong>July 1, 2026</strong><br><small>2026-2027 cycle</small></td>
             <td class="typ">~Annual</td>
             <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
             <td class="elig">Early career; cardiovascular ultrasound/echo focus; addresses clinical gaps</td>
             <td><a class="lnk" href="https://www.asecho.org/what-we-do/awards-and-scholarships/" target="_blank">Visit ↗</a></td>
           </tr>
-          <tr data-type="clinical" data-status="unknown" data-src="society">
+          <tr data-type="clinical" data-status="closed" data-src="society">
             <td><strong>ASE Pamela S. Douglas Research Scholar Award</strong></td>
             <td>American Society of Echocardiography</td>
             <td><span class="badge b-clinical">Clinical</span></td>
             <td class="amt">Scholar award</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td><span class="pill pill-closed"><span class="pill-dot"></span>Closed</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">~March 3</td>
             <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
@@ -460,7 +468,7 @@
             <td><span class="badge b-any">Any Type</span></td>
             <td class="amt">NIH stipend scale</td>
             <td><span class="pill pill-announced"><span class="pill-dot"></span>Announced</span></td>
-            <td class="dl-cell"><strong>Rolling</strong><br><small>Apr 8 / Aug 8 / Dec 8</small></td>
+            <td class="dl-cell"><strong>Rolling</strong><br><small>Next: Aug 8, 2026</small></td>
             <td class="typ">3&times;/year</td>
             <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
             <td class="elig">Postdoctoral; US citizen/PR (most institutes); identify sponsoring mentor; 3 submission cycles/year</td>
@@ -472,7 +480,7 @@
             <td><span class="badge b-basic">Basic Sci.</span> <span class="badge b-translational">Translational</span></td>
             <td class="amt">~$150–180K/yr</td>
             <td><span class="pill pill-announced"><span class="pill-dot"></span>Announced</span></td>
-            <td class="dl-cell"><strong>Rolling</strong><br><small>Feb / Jun / Oct</small></td>
+            <td class="dl-cell"><strong>Rolling</strong><br><small>Next: Jun 12, 2026</small></td>
             <td class="typ">3&times;/year</td>
             <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
             <td class="elig">MD/DO; ≥75% protected time; basic or translational focus; no prior R01; mentored</td>
@@ -484,7 +492,7 @@
             <td><span class="badge b-clinical">Clinical</span></td>
             <td class="amt">~$150–180K/yr</td>
             <td><span class="pill pill-announced"><span class="pill-dot"></span>Announced</span></td>
-            <td class="dl-cell"><strong>Rolling</strong><br><small>Feb / Jun / Oct</small></td>
+            <td class="dl-cell"><strong>Rolling</strong><br><small>Next: Jun 12, 2026</small></td>
             <td class="typ">3&times;/year</td>
             <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
             <td class="elig">MD/DO; direct patient interaction in research; ≥75% protected time; US citizen/PR only</td>
@@ -496,23 +504,119 @@
             <td><span class="badge b-any">Any Type</span></td>
             <td class="amt">K99 ~$90K &#x2192; R00 ~$250K/yr</td>
             <td><span class="pill pill-announced"><span class="pill-dot"></span>Announced</span></td>
-            <td class="dl-cell"><strong>Rolling</strong><br><small>Feb / Jun / Oct</small></td>
+            <td class="dl-cell"><strong>Rolling</strong><br><small>Next: Jun 12, 2026</small></td>
             <td class="typ">3&times;/year</td>
             <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
             <td class="elig">≤4 yrs postdoc at award; no prior faculty; leads to independent R00; open to non-citizens</td>
             <td><a class="lnk" href="https://www.niaid.nih.gov/grants-contracts/choose-award-career-stage" target="_blank">Visit ↗</a></td>
           </tr>
-          <tr data-type="translational" data-status="unknown" data-src="private">
+          <tr data-type="translational" data-status="closed" data-src="private">
             <td><strong>Burroughs Wellcome Fund — CAMS</strong> <span class="badge b-top">⭐ Prestigious</span></td>
             <td>Burroughs Wellcome Fund</td>
             <td><span class="badge b-translational">Translational</span></td>
             <td class="amt">$700,000</td>
-            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td><span class="pill pill-closed"><span class="pill-dot"></span>Closed</span></td>
             <td class="dl-cell">—</td>
             <td class="typ">~Oct 7</td>
             <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
             <td class="elig">MD-PhD or equivalent; ≤13 yrs post-clinical doctorate; bridges mentored training to independence; US/Canada; physician-scientist</td>
             <td><a class="lnk" href="https://www.bwfund.org/grants/biomedical-sciences/career-awards-for-medical-scientists/" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="any" data-status="open" data-src="internal">
+            <td><strong>UCSD Cardiology T32 — Cardiovascular Physiology &amp; Pharmacology</strong> <span class="badge b-top">⭐ UCSD Internal</span></td>
+            <td>UCSD Div. of Cardiovascular Medicine / NHLBI</td>
+            <td><span class="badge b-basic">Basic Sci.</span> <span class="badge b-translational">Translational</span></td>
+            <td class="amt">NRSA stipend</td>
+            <td><span class="pill pill-open"><span class="pill-dot"></span>Open</span></td>
+            <td class="dl-cell"><strong>Internal</strong><br><small>Contact PI by Jan 1, Yr 2</small></td>
+            <td class="typ">Jan 1, Y2</td>
+            <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">US citizen/perm resident; UCSD cardiology fellow; basic or translational research; in continuous funding since 1976; contact T32 PI directly to request appointment</td>
+            <td><a class="lnk" href="https://cardiology.ucsd.edu/education/fellowships/cardiovascular-diseases/research.html#nih-t32-training-program-on-cardiovascular-physiol" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="translational" data-status="open" data-src="internal">
+            <td><strong>UCSD Preventive Medicine T32 — Integrated CV Epidemiology Fellowship</strong> <span class="badge b-top">⭐ UCSD Internal</span></td>
+            <td>UCSD Dept. of Family Medicine &amp; Public Health / NHLBI</td>
+            <td><span class="badge b-translational">Translational</span> <span class="badge b-clinical">Clinical</span></td>
+            <td class="amt">NRSA stipend</td>
+            <td><span class="pill pill-open"><span class="pill-dot"></span>Open</span></td>
+            <td class="dl-cell"><strong>Internal</strong><br><small>Contact PI by Jan 1, Yr 2</small></td>
+            <td class="typ">Jan 1, Y2</td>
+            <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">US citizen/perm resident; CV epidemiology &amp; prevention focus; ~2 year commitment; interdisciplinary training with UCSD School of Public Health; contact T32 PI directly</td>
+            <td><a class="lnk" href="https://familymedicine.ucsd.edu/divisions/preventive-medicine/education-training/integrated-cardiovascular-epidemiology-fellowship-t32/index.html" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="clinical" data-status="unknown" data-src="society">
+            <td><strong>ISHLT Cardiogenic Shock Research Grant</strong></td>
+            <td>International Society for Heart &amp; Lung Transplantation</td>
+            <td><span class="badge b-clinical">Clinical</span></td>
+            <td class="amt">$140,000 (2yr)</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~January</td>
+            <td><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">Trainee or junior faculty at active cardiogenic shock program; cardiology, critical care, or cardiac surgery; no prior major grant; 2yr award</td>
+            <td><a class="lnk" href="https://www.ishlt.org/grants-and-awards/grants-awards/cardiogenic-shock-research-grant" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="translational" data-status="unknown" data-src="society">
+            <td><strong>ISHLT/Enduring Hearts Transplant Longevity Research Grant</strong></td>
+            <td>ISHLT + Enduring Hearts Foundation</td>
+            <td><span class="badge b-translational">Translational</span></td>
+            <td class="amt">$160,000 (2yr)</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~January</td>
+            <td><span class="yr yrp">Post</span></td>
+            <td class="elig">Completed clinical or post-doctoral training; ISHLT member; research translatable to clinical practice within 5 yrs; transplant longevity focus</td>
+            <td><a class="lnk" href="https://www.ishlt.org/grants-and-awards/grants-awards/ishlt-enduring-hearts-transplant-longevity-research-grant" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="translational" data-status="unknown" data-src="society">
+            <td><strong>ISHLT/O.H. Frazier MCS Translational Research Grant</strong></td>
+            <td>International Society for Heart &amp; Lung Transplantation</td>
+            <td><span class="badge b-translational">Translational</span></td>
+            <td class="amt">$65,000 (1yr)</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~January</td>
+            <td><span class="yr yrp">Post</span></td>
+            <td class="elig">Board certified/eligible ≤3 yrs; full-time faculty appointment required; active VAD/transplant program; MCS translational research focus</td>
+            <td><a class="lnk" href="https://www.ishlt.org/grants-and-awards/grants-awards/ishlt-o.h.-frazier-grant-in-mcs-translational-research" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="any" data-status="unknown" data-src="society">
+            <td><strong>Myocarditis Foundation Research Grant</strong></td>
+            <td>Myocarditis Foundation</td>
+            <td><span class="badge b-any">Any Type</span></td>
+            <td class="amt">$40,000</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~December</td>
+            <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span><span class="yr yrp">Post</span></td>
+            <td class="elig">Within 10 yrs of MD/PhD; myocarditis research focus; US or Canada; mentor with myocarditis commitment required</td>
+            <td><a class="lnk" href="https://www.myocarditisfoundation.org/research-and-grants/research-and-grant-program/" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="translational" data-status="unknown" data-src="society">
+            <td><strong>PHA Aldrighetti Research Award for Young Investigators</strong></td>
+            <td>Pulmonary Hypertension Association</td>
+            <td><span class="badge b-translational">Translational</span></td>
+            <td class="amt">$40,000/yr × 2yr</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~November</td>
+            <td><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
+            <td class="elig">Postdocs / junior investigators; PAH pathophysiology — mechanistic pathways, therapeutic targets, or biomarkers; no indirect costs paid</td>
+            <td><a class="lnk" href="https://phassociation.org/research/pharesearchprogram/aldrighetti-research-award-young-investigators/" target="_blank">Visit ↗</a></td>
+          </tr>
+          <tr data-type="any" data-status="unknown" data-src="society">
+            <td><strong>Marfan Foundation — Victor A. McKusick Fellowship Grant</strong></td>
+            <td>The Marfan Foundation</td>
+            <td><span class="badge b-any">Any Type</span></td>
+            <td class="amt">$75,000/yr × 2yr (MD)</td>
+            <td><span class="pill pill-unknown"><span class="pill-dot"></span>Not checked</span></td>
+            <td class="dl-cell">—</td>
+            <td class="typ">~January</td>
+            <td><span class="yr yr1">Y1</span><span class="yr yr2">Y2</span><span class="yr yr3">Y3</span></td>
+            <td class="elig">Up to PGY6; Marfan syndrome or genetic aortic/vascular conditions; $75K/yr (MD) or $50K/yr (PhD); mentor required; US institution</td>
+            <td><a class="lnk" href="https://www.marfan.org/mckusick-fellowship" target="_blank">Visit ↗</a></td>
           </tr>
 <!-- END:AWARD-ROWS -->
         </tbody>
@@ -543,6 +647,8 @@
           <div class="tl-item tl-dl"><strong>HRS Research Fellowship (~Dec)</strong><span>$75K; EP focus; basic or clinical track</span></div>
           <div class="tl-item tl-dl"><strong>AHA Postdoctoral Fellowship (~Aug)</strong><span>NIH-matched stipend; identify mentor early</span></div>
           <div class="tl-item tl-dl"><strong>ASE Douglas Scholar Award (~March)</strong><span>If echo-focused research</span></div>
+          <div class="tl-item tl-dl"><strong>Marfan McKusick Fellowship (~Jan)</strong><span>$75K/yr ×2; if Marfan/genetic aortic focus; up to PGY6</span></div>
+          <div class="tl-item tl-dl"><strong>PHA Aldrighetti Award (~Nov)</strong><span>$80K total; if pulmonary hypertension interest</span></div>
           <div class="tl-item tl-act"><strong>Begin NIH F32 planning</strong><span>Apr / Aug / Dec deadlines; pick target date</span></div>
           <div class="tl-item tl-act"><strong>Draft K-award specific aims</strong><span>12–18 months to write well; start now</span></div>
         </div>
@@ -554,6 +660,8 @@
           <div class="tl-item tl-dl"><strong>NIH F32 (if not yet funded)</strong><span>Apr / Aug / Dec; rolling cycles</span></div>
           <div class="tl-item tl-dl"><strong>NIH K99/R00</strong><span>Must have ≤4 yrs postdoc; plan early</span></div>
           <div class="tl-item tl-dl"><strong>AHA Career Development Award (~Dec)</strong><span>Approaching first faculty appointment</span></div>
+          <div class="tl-item tl-dl"><strong>Myocarditis Foundation Grant (~Dec)</strong><span>$40K; if myocarditis research focus; within 10 yrs of MD</span></div>
+          <div class="tl-item tl-dl"><strong>ISHLT Cardiogenic Shock Grant (~Jan)</strong><span>$140K/2yr; if MCS/cardiogenic shock focus</span></div>
           <div class="tl-item tl-dl"><strong>Burroughs Wellcome CAMS (~Oct)</strong><span>$700K, 5 yrs; MD-PhD ideal</span></div>
           <div class="tl-item tl-act"><strong>Generate preliminary data</strong><span>Critical for NIH K-award competitiveness</span></div>
         </div>
@@ -564,7 +672,9 @@
           <div class="tl-item tl-dl"><strong>NIH K08/K23 (if not yet funded)</strong><span>Submit as new faculty; 75% protected time required</span></div>
           <div class="tl-item tl-dl"><strong>AHA Career Development Award</strong><span>≤6 yrs from first faculty appointment</span></div>
           <div class="tl-item tl-dl"><strong>AHA Innovative Project Award</strong><span>$100K/yr; faculty-level; beyond training stage</span></div>
-          <div class="tl-item tl-dl"><strong>HFSA Emerging Leader Grant</strong><span>Up to $250K/yr; newer program</span></div>
+          <div class="tl-item tl-dl"><strong>HFSA Emerging Leader Grant</strong><span>Up to $150K/yr; newer program</span></div>
+          <div class="tl-item tl-dl"><strong>ISHLT Enduring Hearts Grant (~Jan)</strong><span>$160K/2yr; transplant longevity research</span></div>
+          <div class="tl-item tl-dl"><strong>ISHLT Frazier MCS Grant (~Jan)</strong><span>$65K; faculty appointment required; VAD/MCS focus</span></div>
           <div class="tl-item tl-act"><strong>Transition to R01 planning</strong><span>Typically 2–3 yrs post-K award activation</span></div>
         </div>
       </div>
@@ -579,6 +689,8 @@
         <div class="mon"><div class="mon-name">JAN</div><div class="mon-body">
           <div class="ci ci-gr">Watch for ACC Merck opening</div>
           <div class="ci ci-b">NIH F32 prep (Apr)</div>
+          <div class="ci ci-b">ISHLT grants deadline</div>
+          <div class="ci ci-b">Marfan McKusick Fellowship</div>
         </div></div>
         <div class="mon"><div class="mon-name">FEB</div><div class="mon-body">
           <div class="ci ci-r">NIH K08/K23/K99</div>
@@ -625,11 +737,13 @@
           <div class="ci ci-o">SCAI ECRG opens</div>
           <div class="ci ci-b">HRS site opens</div>
           <div class="ci ci-gr">AHA Sessions</div>
+          <div class="ci ci-r">PHA Aldrighetti Award</div>
         </div></div>
         <div class="mon"><div class="mon-name">DEC</div><div class="mon-body">
           <div class="ci ci-r">HRS Fellowship (~Dec 3)</div>
           <div class="ci ci-r">AHA Career Dev (~Dec 1)</div>
           <div class="ci ci-r">NIH F32 (Dec 8)</div>
+          <div class="ci ci-r">Myocarditis Foundation Grant</div>
         </div></div>
       </div>
     </div>
